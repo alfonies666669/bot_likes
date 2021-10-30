@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage:
@@ -23,7 +25,7 @@ class BasePage:
         pass
 
     def check_login_user(self):
-        a = self.browser.find_element_by_css_selector('input#email.big_text')
+        a = self.browser.find_element_by_css_selector('input#index_email.big_text')
         if a is not None:
             return False
         return True
@@ -33,3 +35,4 @@ class BasePage:
         last_like.click()
         url_like = self.browser.current_url
         return url_like
+
