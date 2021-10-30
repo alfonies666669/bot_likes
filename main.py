@@ -3,26 +3,7 @@ import time
 from base_page import BasePage
 
 
-def vk():
-    link = "https://vk.com/"
-    link_likes = "https://vk.com/feed?section=likes"
-    css_saved = "div.wall_text"
-    login = "+79961650920"
-    password = "22021996Alexandr)"
-    login_form = 'input#email.big_text'
-    pass_form = 'input#pass.big_text'
-    enter_button = "//*[@id='login_button']"
 
-
-def inst():
-    login = "santscho6666"
-    password = "22021996alexandruser1234"
-    link = "https://www.instagram.com/"
-    link_likes = f"https://www.instagram.com/{login}/saved/"
-    css_saved = ''
-    login_form = "//input[@name='username']"
-    pass_form = "//input[@name='password']"
-    enter_button = "button[type='submit']"
 
 
 def main(browser, link, link_likes, login, password, login_form, pass_form, enter_button, css_saved):
