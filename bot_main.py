@@ -27,21 +27,54 @@ def send_liked(message):
 
     m_page = BasePage(browser, data["m_vk_feed"])
     m_page.go_to_page()
-    time.sleep(2)
-    m_page.enter(data["m_login_pass_form_vk"], data["login_vk"], data["password_vk"],
-                 data["m_enter_button"])
-    time.sleep(2)
-    page_likes = BasePage(browser, data["m_likes_page"])
-    page_likes.go_to_page()
-    last_saved = page_likes.get_last_saved()
+    m_page.waiting_complete_load_page()
+    m_page.enter_vk(data["m_login_pass_form_vk"], data["login_vk"], data["password_vk"],
+                    data["m_enter_button"])
+    m_page.waiting_complete_load_page()
+    page_likes_vk = BasePage(browser, data["m_likes_page"])
+    page_likes_vk.go_to_page()
+    window_vk = browser.window_handles[0]
+    last_saved_vk = page_likes_vk.get_last_saved_vk()
+
+    inst_page = BasePage(browser, data["link_inst"])
+    inst_page.new_tab()
+    window_inst = browser.window_handles[1]
+    browser.switch_to_window(window_inst)
+    inst_page.go_to_page()
+    inst_page.waiting_complete_load_page()
+    inst_page.enter_inst(data["login_form_inst"], data["pass_form_inst"], data["login_inst"],
+                         data["password_inst"], data["enter_button_inst"])
+    inst_page.waiting_complete_load_page()
+    inst_page.check_save_data(data["save_data"], data["sub_section_save"])
+    inst_page.waiting_complete_load_page()
+    inst_page.check_save_data(data["note_section"], data["note_submit"])
+    inst_page.waiting_complete_load_page()
+    page_likes_inst = BasePage(browser, f"https://www.instagram.com/{data['login_inst']}/saved/")
+    page_likes_inst.go_to_page()
+    page_likes_inst.waiting_complete_load_page()
+    last_saved_inst = page_likes_inst.get_last_saved_inst(data["last_pic_inst"])
+
     while True:
-        time.sleep(10)
-        browser.refresh()
-        new = page_likes.get_last_saved()
-        if last_saved != new:
-            last_saved = new
-            bot.reply_to(message, last_saved)
-        else:
+        try:
+            time.sleep(10)
+            browser.switch_to_window(window_vk)
+            browser.refresh()
+            page_likes_vk.waiting_complete_load_page()
+            new_vk = page_likes_vk.get_last_saved_vk()
+            if last_saved_vk != new_vk:
+                last_saved_vk = new_vk
+                bot.send_message(message.chat.id, text=last_saved_vk)
+            browser.switch_to_window(window_inst)
+            browser.refresh()
+            page_likes_inst.waiting_complete_load_page()
+            new_inst = page_likes_inst.get_last_saved_inst(data["last_pic_inst"])
+            if last_saved_inst != new_inst:
+                last_saved_inst = new_inst
+                bot.send_message(message.chat.id, text=last_saved_inst)
+            else:
+                continue
+        except Exception as ex:
+            print(ex)
             continue
 
 
